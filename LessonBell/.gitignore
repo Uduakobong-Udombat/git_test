@@ -6,4 +6,8 @@ app/build/
 local.properties
 *.apk
 *.aab
+*.jks
+*.keystore
+*.p12
+*.pem
 .DS_Store

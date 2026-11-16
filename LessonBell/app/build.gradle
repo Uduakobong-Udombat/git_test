@@ -1,5 +1,8 @@
 plugins { id 'com.android.application' }
 
+def signingKeyFile = System.getenv('LESSONBELL_KEYSTORE_PATH')
+def signingPassword = System.getenv('LESSONBELL_STORE_PASSWORD')
+
 android {
     namespace 'com.lessonbell.watch'
     compileSdk 35
@@ -7,10 +10,36 @@ android {
         applicationId 'com.lessonbell.watch'
         minSdk 30
         targetSdk 34
-        versionCode 4
-        versionName '1.3.0'
+        versionCode 5
+        versionName '1.3.1'
     }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+
+    // Both variants are signed using the SAME permanent certificate.
+    // Keystore and password are provided at runtime through GitHub Actions secrets.
+    signingConfigs {
+        permanent {
+            if (signingKeyFile && signingPassword) {
+                storeFile file(signingKeyFile)
+                storePassword signingPassword
+                keyAlias 'lessonbell'
+                keyPassword signingPassword
+            }
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.permanent
+            debuggable false
+            minifyEnabled false
+        }
+        migration {
+            initWith release
+            signingConfig signingConfigs.permanent
+            debuggable true
+            matchingFallbacks = ['release']
+        }
+    }
 }
 
 dependencies {

@@ -11,5 +11,5 @@ required = [
 ]
 for item in required:
     assert item in src, f'missing {item}'
-assert 'versionCode 4' in Path('LessonBell/app/build.gradle').read_text()
+assert 'versionCode 5' in Path('LessonBell/app/build.gradle').read_text()
 print('PASS: expanded colorful Tiles, controls, refresh and version bump')
