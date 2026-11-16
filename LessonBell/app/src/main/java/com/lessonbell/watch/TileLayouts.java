@@ -65,7 +65,7 @@ public final class TileLayouts {
     private static LayoutElementBuilders.Box control(Context context, String text, String action,
                                                       int background, int foreground, boolean open) {
         return new LayoutElementBuilders.Box.Builder()
-            .setWidth(DimensionBuilders.dp(56)).setHeight(DimensionBuilders.dp(34))
+            .setWidth(DimensionBuilders.dp(48)).setHeight(DimensionBuilders.dp(32))
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
             .setModifiers(new ModifiersBuilders.Modifiers.Builder()
@@ -87,12 +87,12 @@ public final class TileLayouts {
 
     private static LayoutElementBuilders.Box countdown(String text) {
         return new LayoutElementBuilders.Box.Builder()
-            .setWidth(DimensionBuilders.dp(176)).setHeight(DimensionBuilders.dp(33))
+            .setWidth(DimensionBuilders.dp(169)).setHeight(DimensionBuilders.dp(30))
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
             .setModifiers(new ModifiersBuilders.Modifiers.Builder()
                 .setBackground(fill(MINT_BG,17)).build())
-            .addContent(label(text,17,MINT,true)).build();
+            .addContent(label(text,15,MINT,true)).build();
     }
 
     // Tiles must fill their viewport, not wrap a tiny content column.
@@ -119,10 +119,10 @@ public final class TileLayouts {
         }
         boolean skipped=Lessons.isSkipped(context,today);
         LayoutElementBuilders.Column.Builder c=new LayoutElementBuilders.Column.Builder()
-            .setWidth(DimensionBuilders.dp(184)).setHeight(DimensionBuilders.wrap())
+            .setWidth(DimensionBuilders.dp(182)).setHeight(DimensionBuilders.wrap())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-            .addContent(label("✦  NEXT LESSON",12,CYAN,true))
-            .addContent(gap(8));
+            .addContent(label("✦  NEXT LESSON",11,CYAN,true))
+            .addContent(gap(4));
         if(upcoming == null) {
             c.addContent(label("All clear",23,WHITE,true)).addContent(gap(8))
              .addContent(label("No upcoming classes",14,MUTED,false))
@@ -132,17 +132,16 @@ public final class TileLayouts {
             ZonedDateTime at=lesson.at(upcoming.getKey(),ZoneId.systemDefault());
             long minutes=Math.max(1,(Duration.between(now,at).getSeconds()+59)/60);
             String remaining=minutes<60 ? "IN "+minutes+" MIN" : "IN "+(minutes/60)+"H "+(minutes%60)+"M";
-            c.addContent(label(lesson.group,21,WHITE,true))
+            c.addContent(label(lesson.group,19,WHITE,true))
+             .addContent(label(lesson.start.format(TIME),36,AMBER,true))
+             .addContent(label(upcoming.getKey().format(DAY),11,MUTED,false))
              .addContent(gap(1))
-             .addContent(label(lesson.start.format(TIME),39,AMBER,true))
-             .addContent(label(upcoming.getKey().format(DAY),12,MUTED,false))
-             .addContent(gap(3))
-             .addContent(label(lesson.room+"  •  "+lesson.period,13,LAVENDER,true))
-             .addContent(gap(10))
+             .addContent(label(lesson.room+"  •  "+lesson.period,12,LAVENDER,true))
+             .addContent(gap(6))
              .addContent(countdown(remaining));
         }
-        if(skipped) c.addContent(gap(3)).addContent(label("TODAY'S ALERTS PAUSED",10,CORAL,true));
-        c.addContent(gap(skipped?9:13)).addContent(actions(context,skipped));
+        if(skipped) c.addContent(gap(2)).addContent(label("TODAY'S ALERTS PAUSED",10,CORAL,true));
+        c.addContent(gap(skipped?4:8)).addContent(actions(context,skipped));
         return render(c.build());
     }
 
@@ -153,7 +152,7 @@ public final class TileLayouts {
             .addContent(new LayoutElementBuilders.Spacer.Builder().setWidth(DimensionBuilders.dp(8)).build())
             .addContent(label(lesson.group+" "+lesson.period,12,WHITE,true)).build();
         return new LayoutElementBuilders.Box.Builder()
-            .setWidth(DimensionBuilders.dp(183)).setHeight(DimensionBuilders.dp(27))
+            .setWidth(DimensionBuilders.dp(166)).setHeight(DimensionBuilders.dp(25))
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
             .setModifiers(new ModifiersBuilders.Modifiers.Builder()
@@ -168,10 +167,10 @@ public final class TileLayouts {
         LayoutElementBuilders.Column.Builder c=new LayoutElementBuilders.Column.Builder()
             .setWidth(DimensionBuilders.dp(185)).setHeight(DimensionBuilders.wrap())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-            .addContent(label("✦  TODAY'S LESSONS",12,CYAN,true))
+            .addContent(label("✦  TODAY'S LESSONS",11,CYAN,true))
             .addContent(gap(2))
             .addContent(label(date.format(DAY),12,MUTED,false))
-            .addContent(gap(10));
+            .addContent(gap(7));
         if(skipped) {
             c.addContent(label("Alerts paused",18,CORAL,true))
              .addContent(gap(6)).addContent(label("Enable to resume today",11,MUTED,false));
@@ -183,11 +182,11 @@ public final class TileLayouts {
             int count=Math.min(5,lessons.size());
             for(int i=0;i<count;i++){
                 c.addContent(lessonRow(lessons.get(i),palette[i%palette.length]));
-                if(i<count-1)c.addContent(gap(3));
+                if(i<count-1)c.addContent(gap(2));
             }
             if(lessons.size()>5)c.addContent(gap(3)).addContent(label("+"+(lessons.size()-5)+" more in the app",11,MUTED,false));
         }
-        c.addContent(gap(12)).addContent(actions(context,skipped));
+        c.addContent(gap(8)).addContent(actions(context,skipped));
         return render(c.build());
     }
 }
