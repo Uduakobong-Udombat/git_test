@@ -36,3 +36,9 @@ Editable timetable on the watch, direct Google Calendar OAuth login, an explicit
 - Tiles update when alarms or calendar cache change, plus a best-effort one-minute freshness interval. Wear OS may throttle Tile refresh; countdown is approximate, not guaranteed to tick each minute. Scheduled lesson alarms are independent of tile rendering.
 - Tile controls act locally: Skip toggles today's skip state; Sync starts a watch-side Google API refresh when authorized, and Open launches LessonBell.
 - Permissions and calendar settings are unchanged; updating the APK requires the same signing certificate. If Android rejects the upgrade, **back up local settings before uninstalling**; debug APKs produced by independent GitHub runners typically have different signing certificates.
+
+
+## v1.3 colorful Tiles preview (not an in-place upgrade yet)
+- Next Lesson Tile has a full-viewport dark navy background, large amber start time, mint countdown, violet room, and larger colorful buttons.
+- Today's Lessons Tile shows up to five timetable rows in colored accents and uses more of the circular screen.
+- **Signing blocker:** v1.2 was signed by a temporary GitHub-hosted debug keystore whose private key was not retained in the repository or artifacts. The SHA-1 alone cannot reproduce that signature. Do not uninstall v1.2 merely to test this preview. An in-place upgrade requires the original v1.2 signing keystore; absent that, a one-time migration to a persistently stored signing key would be needed.

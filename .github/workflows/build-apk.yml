@@ -1,7 +1,7 @@
 name: Build LessonBell Wear OS APK
 on:
   push:
-    branches: [lessonbell-wearos-v1]
+    branches: [lessonbell-wearos-v1, lessonbell-v1.3-tiles-preview]
     paths:
       - 'lessonbell/source.tar.xz'
       - 'LessonBell/**'
@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'lessonbell/source.tar.xz'
+      - 'LessonBell/**'
       - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 permissions:
@@ -30,6 +31,8 @@ jobs:
         run: python3 LessonBell/tests/check_seed.py
       - name: Check Google Calendar integration wiring
         run: python3 LessonBell/tests/check_google_sync.py
+      - name: Check expanded colorful Tiles
+        run: python3 LessonBell/tests/check_tiles.py
       - name: Install Android SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
@@ -47,6 +50,6 @@ jobs:
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: LessonBell-WearOS-v1.1-debug-APK
+          name: LessonBell-v1.3-tiles-preview-UNSIGNED-UPGRADE-INCOMPATIBLE
           path: LessonBell/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
