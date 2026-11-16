@@ -29,6 +29,8 @@ jobs:
         run: tar -xJf lessonbell/source.tar.xz
       - name: Check timetable fixture
         run: python3 LessonBell/tests/check_seed.py
+      - name: Check Google Calendar integration wiring
+        run: python3 LessonBell/tests/check_google_sync.py
       - name: Install Android SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
@@ -38,12 +40,15 @@ jobs:
       - name: Build debug APK
         working-directory: LessonBell
         run: gradle --no-daemon --stacktrace assembleDebug
+      - name: Print APK signing SHA-1 for Google Cloud OAuth setup
+        run: |
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android | grep -E 'SHA1:|SHA256:'
       - name: Verify APK exists
         run: test -s LessonBell/app/build/outputs/apk/debug/app-debug.apk
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: LessonBell-WearOS-v1-debug-APK
+          name: LessonBell-WearOS-v1.1-debug-APK
           path: LessonBell/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
       - name: Publish unpacked editable source files
