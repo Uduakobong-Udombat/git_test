@@ -1,0 +1,1 @@
+LessonBell standalone Wear OS app. Complete Gradle project is in source.tar.xz; the GitHub workflow extracts it, builds and uploads a debug APK, then publishes editable sources under LessonBell/. This work is isolated in the lessonbell-wearos-v1 branch, not merged into the repository default branch.
