@@ -1,4 +1,4 @@
-# LessonBell — standalone Wear OS reminder app
+# LessonBell v1.2 — standalone Wear OS reminder app
 
 A native, **watch-only** timetable app for the OPPO Watch X (Wear OS). No Android phone companion is needed. Default schedule was transcribed from the supplied school timetable (15 individual teaching periods, Monday–Thursday).
 
@@ -28,3 +28,11 @@ The default schedule and skip dates reside only on the watch. Reading calendar d
 
 ## Follow-up opportunities
 Editable timetable on the watch, direct Google Calendar OAuth login, an explicit alert grouping setting (first period only vs every period), and backup/export.
+
+
+## Version 1.2 — two Wear OS Tiles
+- **Next Lesson** tile: next upcoming period, class, room, rounded-up minute countdown, and Skip/Enable, Sync, Open actions.
+- **Today’s Lessons** tile: up to 4 periods, disabled-date status, and the same quick controls.
+- Tiles update when alarms or calendar cache change, plus a best-effort one-minute freshness interval. Wear OS may throttle Tile refresh; countdown is approximate, not guaranteed to tick each minute. Scheduled lesson alarms are independent of tile rendering.
+- Tile controls act locally: Skip toggles today's skip state; Sync starts a watch-side Google API refresh when authorized, and Open launches LessonBell.
+- Permissions and calendar settings are unchanged; updating the APK requires the same signing certificate. If Android rejects the upgrade, **back up local settings before uninstalling**; debug APKs produced by independent GitHub runners typically have different signing certificates.

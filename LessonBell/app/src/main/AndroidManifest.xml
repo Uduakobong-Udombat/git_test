@@ -19,6 +19,30 @@
             </intent-filter>
         </activity>
         <service android:name=".CalendarSyncJob" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true" />
+        <service android:name=".NextLessonTileService"
+            android:label="Next Lesson"
+            android:description="Next lesson and quick watch controls"
+            android:icon="@drawable/ic_app"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+            <meta-data android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/preview_next_lesson" />
+        </service>
+        <service android:name=".TodayTileService"
+            android:label="Today's Lessons"
+            android:description="Today's timetable and quick controls"
+            android:icon="@drawable/ic_app"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+            <meta-data android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/preview_today" />
+        </service>
         <receiver android:name=".AlertReceiver" android:exported="false" />
         <receiver android:name=".ScheduleReceiver" android:exported="false">
             <intent-filter>

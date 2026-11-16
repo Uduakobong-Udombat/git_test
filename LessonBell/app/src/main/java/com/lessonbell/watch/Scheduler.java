@@ -34,7 +34,7 @@ public final class Scheduler {
         AlarmManager a=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
         if(a==null)return;
         LocalDate now=LocalDate.now();
-        if(!canSchedule(c)) { Log.w("LessonBell","Exact alarm access not granted");return; }
+        if(!canSchedule(c)) { Log.w("LessonBell","Exact alarm access not granted"); TileRefresh.request(c);return; }
         // Cancel previously registered days first so date exclusions and changed calendar events apply.
         // Persist exact alarm IDs because calendar events may disappear on refresh.
         Set<String> old=Lessons.prefs(c).getStringSet("scheduled",Collections.emptySet());
@@ -69,5 +69,6 @@ public final class Scheduler {
         }
         Lessons.prefs(c).edit().putStringSet("scheduled",current).apply();
         Log.i("LessonBell","Scheduled "+current.size()+" alarms");
+        TileRefresh.request(c);
     }
 }
