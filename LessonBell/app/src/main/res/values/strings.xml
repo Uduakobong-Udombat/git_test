@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">LessonBell</string>
     <string name="tile_next_description">Next lesson and quick watch controls</string>
-    <string name="tile_today_description">Today's timetable and quick controls</string>
+    <string name="tile_today_description">Daily timetable and quick controls</string>
 </resources>
