@@ -36,9 +36,23 @@ jobs:
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
           test -n "$SDKMANAGER"
           "$SDKMANAGER" --install 'platforms;android-35' 'build-tools;35.0.0'
-      - name: Compile validation-only build
-        working-directory: LessonBell
-        run: gradle --no-daemon assembleDebug
+      - name: Compile and verify ALL APK variants using a one-use validation-only key
+        shell: bash
+        run: |
+          set -euo pipefail
+          VALIDATION_PASSWORD=$(openssl rand -hex 20)
+          VALIDATION_KEY="$RUNNER_TEMP/lessonbell-validation-only.p12"
+          keytool -genkeypair -noprompt -storetype PKCS12 -keystore "$VALIDATION_KEY" \
+            -alias lessonbell -keyalg RSA -keysize 2048 -validity 365 \
+            -dname 'CN=Validation Only' -storepass "$VALIDATION_PASSWORD" -keypass "$VALIDATION_PASSWORD"
+          LESSONBELL_KEYSTORE_PATH="$VALIDATION_KEY" LESSONBELL_STORE_PASSWORD="$VALIDATION_PASSWORD" \
+            gradle -p LessonBell --no-daemon assembleDebug assembleMigration assembleRelease
+          APKTOOL="$ANDROID_HOME/build-tools/35.0.0/apksigner"
+          MIGRATION_SHA=$("$APKTOOL" verify --print-certs LessonBell/app/build/outputs/apk/migration/app-migration.apk | sed -n 's/.*certificate SHA-1 digest: //p' | head -n1)
+          RELEASE_SHA=$("$APKTOOL" verify --print-certs LessonBell/app/build/outputs/apk/release/app-release.apk | sed -n 's/.*certificate SHA-1 digest: //p' | head -n1)
+          test -n "$MIGRATION_SHA" && test "$MIGRATION_SHA" = "$RELEASE_SHA"
+          rm -f "$VALIDATION_KEY"
+          echo 'PASS: both release variants compiled and matched the test certificate (NOT DISTRIBUTED).'
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.head_commit.message == 'Trigger signed LessonBell release') }}
