@@ -1,0 +1,1 @@
+Request permanently signed LessonBell v1.3.1 release after confirmation of GitHub Actions encrypted signing secret.
