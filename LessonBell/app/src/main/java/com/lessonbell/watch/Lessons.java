@@ -73,7 +73,7 @@ public final class Lessons {
                 JSONObject x=a.getJSONObject(i);
                 LocalDate date=LocalDate.parse(x.getString("date"));
                 v.add(new Lesson("cal-"+x.getString("id"),date.getDayOfWeek(),"Calendar",x.getString("title"),
-                        x.getString("title"),x.optString("room","Calendar"),LocalTime.parse(x.getString("start")),
+                        x.optString("group",x.getString("title")),x.optString("room","Calendar"),LocalTime.parse(x.getString("start")),
                         LocalTime.parse(x.getString("end")),date));
             }
         } catch(Exception ignored) { /* Damaged cache cannot disrupt offline lessons. */ }
@@ -82,8 +82,15 @@ public final class Lessons {
     public static List<Lesson> forDate(Context c, LocalDate date) {
         List<Lesson> out=new ArrayList<>();
         if(isSkipped(c,date))return out;
-        for(Lesson x:weekly()) if(x.day==date.getDayOfWeek())out.add(x);
-        for(Lesson x:calendar(c)) if(date.equals(x.date)) {
+        List<Lesson> matchingCalendar=new ArrayList<>();
+        for(Lesson x:calendar(c))if(date.equals(x.date))matchingCalendar.add(x);
+        Set<String> overrideGroups=new HashSet<>();
+        // A calendar event that identifies a class replaces that class's preloaded periods for the day.
+        // This avoids stale alerts when a class is moved or a double period is a single event.
+        if(prefs(c).getBoolean("calendar_authoritative",true))
+            for(Lesson x:matchingCalendar)if(!"Calendar".equals(x.group))overrideGroups.add(x.group);
+        for(Lesson x:weekly()) if(x.day==date.getDayOfWeek()&&!overrideGroups.contains(x.group))out.add(x);
+        for(Lesson x:matchingCalendar) {
             boolean duplicate=false;
             for(Lesson y:out) if(Math.abs(Duration.between(y.start,x.start).toMinutes())<=2) { duplicate=true;break; }
             if(!duplicate)out.add(x);

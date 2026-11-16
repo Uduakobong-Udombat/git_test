@@ -1,5 +1,5 @@
 package com.lessonbell.watch;
 import android.content.*;
 public class ScheduleReceiver extends BroadcastReceiver {
-    @Override public void onReceive(Context c,Intent i) { Scheduler.schedule(c); }
+    @Override public void onReceive(Context c,Intent i) { Scheduler.schedule(c); GoogleCalendarAuth.enableBackground(c); }
 }
