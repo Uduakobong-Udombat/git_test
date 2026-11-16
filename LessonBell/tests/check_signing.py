@@ -6,7 +6,7 @@ assert "keyAlias 'lessonbell'" in p
 assert 'signingConfig signingConfigs.permanent' in p
 assert 'debuggable false' in p and 'debuggable true' in p
 assert 'assembleMigration assembleRelease' in w
-assert 'LESSONBELL_KEYSTORE_B64' in w
+assert 'LESSONBELL_SIGNING_BUNDLE_B64' in w
 assert 'LESSONBELL_STORE_PASSWORD' in w
 assert 'LESSONBELL_CERT_SHA1' in w
 assert 'app-migration.apk' in w and 'app-release.apk' in w

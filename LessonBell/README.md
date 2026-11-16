@@ -19,3 +19,16 @@ Register the SHA-1 displayed by the signing setup **once** as a new Android OAut
 **Never lose the new keystore or password.** Keep a secure offline backup of both. Subsequent releases must reuse the same key; do not create new GitHub Actions debug certificates for distributable APKs.
 
 The normal push workflow only compiles for validation. Signed release artifacts are created exclusively after explicit release-request commits, and fail closed if secrets are missing. The private key is removed from runners after signing. User hardware testing remains required.
+
+
+## Permanent signing — November 2026, no Homebrew needed
+The public GitHub repository must **never** contain the PKCS#12 keystore or passwords. A permanent private key has been generated and provided to the app owner as a private conversation download. It must be saved in a secure offline backup.
+
+The owner must create **one** GitHub Actions repository secret via https://github.com/Uduakobong-Udombat/git_test/settings/secrets/actions :
+
+Name: `LESSONBELL_SIGNING_BUNDLE_B64`.
+Value: exact contents of the separate privately delivered `github-secret-LESSONBELL_SIGNING_BUNDLE_B64.txt` file. Do not add the file to the Git repository or any issue/comment.
+
+The `release` job decodes the bundle only inside GitHub's temporary runner, checks the keystore, builds both migration and release APKs with the *same certificate*, verifies the resulting SHA-1, then deletes its local copy. The routine validation job uses a throwaway test key and distributes **no** APK. A signed build only runs after the secret is configured and the workflow is dispatched or a `Trigger signed LessonBell release` commit is pushed. The owner must register the newly generated public SHA-1 once as a new Android OAuth client, preserving previous OAuth clients.
+
+The previous debug-signed v1.2 cannot upgrade in place because its original private signing key was not retained. Use the migration script and back up the watch before uninstalling it; migration has not yet been validated on a physical OPPO Watch X.

@@ -60,9 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LESSONBELL_KEYSTORE_B64: ${{ secrets.LESSONBELL_KEYSTORE_B64 }}
-      LESSONBELL_STORE_PASSWORD: ${{ secrets.LESSONBELL_STORE_PASSWORD }}
-      LESSONBELL_CERT_SHA1: ${{ secrets.LESSONBELL_CERT_SHA1 }}
+      LESSONBELL_SIGNING_BUNDLE_B64: ${{ secrets.LESSONBELL_SIGNING_BUNDLE_B64 }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -77,19 +75,34 @@ jobs:
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
           test -n "$SDKMANAGER"
           "$SDKMANAGER" --install 'platforms;android-35' 'build-tools;35.0.0'
-      - name: Load private signing key (fail closed)
+      - name: Load permanent signing key from ONE encrypted repository secret
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "$LESSONBELL_KEYSTORE_B64" || -z "$LESSONBELL_STORE_PASSWORD" || -z "$LESSONBELL_CERT_SHA1" ]]; then
-            echo 'Permanent signing secrets missing. Run the one-time Mac signing setup script.' >&2
+          if [[ -z "${LESSONBELL_SIGNING_BUNDLE_B64:-}" ]]; then
+            echo 'Missing LESSONBELL_SIGNING_BUNDLE_B64 secret. Add it under GitHub Settings > Secrets and variables > Actions.' >&2
             exit 1
           fi
-          echo "LESSONBELL_KEYSTORE_PATH=$RUNNER_TEMP/lessonbell-release.p12" >> "$GITHUB_ENV"
-          printf '%s' "$LESSONBELL_KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/lessonbell-release.p12"
-          chmod 600 "$RUNNER_TEMP/lessonbell-release.p12"
-          test -s "$RUNNER_TEMP/lessonbell-release.p12"
-          keytool -list -alias lessonbell -keystore "$RUNNER_TEMP/lessonbell-release.p12" -storepass "$LESSONBELL_STORE_PASSWORD" >/dev/null
+          BUNDLE="$RUNNER_TEMP/lessonbell-signing-bundle.json"
+          KEYSTORE="$RUNNER_TEMP/lessonbell-release.p12"
+          printf '%s' "$LESSONBELL_SIGNING_BUNDLE_B64" | base64 --decode > "$BUNDLE"
+          chmod 600 "$BUNDLE"
+          jq -e '.schema == 1 and (.keystore_b64 | type == "string") and (.password | type == "string") and (.sha1 | type == "string")' "$BUNDLE" >/dev/null
+          PASSWORD=$(jq -r '.password' "$BUNDLE")
+          FINGERPRINT=$(jq -r '.sha1' "$BUNDLE")
+          printf '%s' "$(jq -r '.keystore_b64' "$BUNDLE")" | base64 --decode > "$KEYSTORE"
+          chmod 600 "$KEYSTORE"
+          test -s "$KEYSTORE"
+          echo "::add-mask::$PASSWORD"
+          keytool -list -alias lessonbell -keystore "$KEYSTORE" -storepass "$PASSWORD" >/dev/null
+          EXPECTED=$(printf '%s' "$FINGERPRINT" | tr -cd '[:xdigit:]' | tr '[:lower:]' '[:upper:]')
+          test "${#EXPECTED}" -eq 40
+          {
+            echo "LESSONBELL_KEYSTORE_PATH=$KEYSTORE"
+            echo "LESSONBELL_STORE_PASSWORD=$PASSWORD"
+            echo "LESSONBELL_CERT_SHA1=$FINGERPRINT"
+          } >> "$GITHUB_ENV"
+          rm -f "$BUNDLE"
       - name: Build permanently signed migration and release APKs
         working-directory: LessonBell
         run: gradle --no-daemon assembleMigration assembleRelease
@@ -123,4 +136,4 @@ jobs:
           retention-days: 90
       - name: Remove private keystore from runner
         if: always()
-        run: rm -f "$RUNNER_TEMP/lessonbell-release.p12"
+        run: rm -f "$RUNNER_TEMP/lessonbell-release.p12" "$RUNNER_TEMP/lessonbell-signing-bundle.json"
