@@ -3,56 +3,44 @@
   <Metadata key="CLOCK_TYPE" value="ANALOG" />
   <Metadata key="PREVIEW_TIME" value="10:10:15" />
   <Scene backgroundColor="#000000">
-    <!-- Fully static, high-quality Guilloche dial; no baked-in hands, time or health values. -->
     <PartImage x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Image resource="dial" />
     </PartImage>
-    <!-- Always-on: black base + soft blue indices, no textures or moving seconds. -->
     <PartImage x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
       <Image resource="ambient" />
     </PartImage>
-
-    <!-- These are WFF v1 platform data sources, not rendered/mockup values. -->
-    <PartText x="183" y="118" width="84" height="34">
+    <!-- Live native WFF v1 data sources. No sample numbers embedded into the dial. -->
+    <PartText x="184" y="121" width="82" height="38">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER">
-        <Font family="SYNC_TO_DEVICE" size="27" color="#1C2737" weight="NORMAL">
-          <Template><![CDATA[%d%%]]><Parameter expression="[BATTERY_PERCENT]" /></Template>
-        </Font>
-      </Text>
+      <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="33" color="#10213B" weight="BOLD">
+        <Template><![CDATA[%d%%]]><Parameter expression="[BATTERY_PERCENT]" /></Template>
+      </Font></Text>
     </PartText>
-    <PartText x="100" y="183" width="58" height="39">
+    <PartText x="80" y="204" width="95" height="44">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER">
-        <Font family="SYNC_TO_DEVICE" size="24" color="#1C2737" weight="NORMAL">
-          <Template><![CDATA[%d]]><Parameter expression="round([HEART_RATE])" /></Template>
-        </Font>
-      </Text>
+      <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="32" color="#10213B" weight="BOLD">
+        <Template><![CDATA[%d]]><Parameter expression="round([HEART_RATE])" /></Template>
+      </Font></Text>
     </PartText>
-    <PartText x="281" y="183" width="80" height="39">
+    <PartText x="269" y="204" width="100" height="44">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER">
-        <Font family="SYNC_TO_DEVICE" size="23" color="#1C2737" weight="NORMAL">
-          <Template><![CDATA[%d]]><Parameter expression="[STEP_COUNT]" /></Template>
-        </Font>
-      </Text>
+      <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="28" color="#10213B" weight="BOLD">
+        <Template><![CDATA[%d]]><Parameter expression="[STEP_COUNT]" /></Template>
+      </Font></Text>
     </PartText>
-    <PartText x="316" y="265" width="28" height="29">
+    <PartText x="324" y="268" width="42" height="36">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER">
-        <Font family="SYNC_TO_DEVICE" size="20" color="#1C2737" weight="NORMAL">
-          <Template><![CDATA[%d]]><Parameter expression="[DAY]" /></Template>
-        </Font>
-      </Text>
+      <Text align="CENTER"><Font family="SYNC_TO_DEVICE" size="29" color="#10213B" weight="NORMAL">
+        <Template><![CDATA[%d]]><Parameter expression="[DAY]" /></Template>
+      </Font></Text>
     </PartText>
-
     <AnalogClock x="0" y="0" width="450" height="450">
-      <HourHand resource="hour" x="216" y="80" width="18" height="169" pivotX="0.5" pivotY="0.857988" />
-      <MinuteHand resource="minute" x="218" y="48" width="14" height="202" pivotX="0.5" pivotY="0.876238" />
-      <!-- The small seconds hand rotates about the inset register at 6 o'clock. -->
-      <SecondHand resource="seconds" x="221" y="281" width="8" height="58" pivotX="0.5" pivotY="0.758621">
+      <HourHand resource="hour" x="211" y="55" width="28" height="196" pivotX="0.5" pivotY="0.8673469" />
+      <MinuteHand resource="minute" x="216" y="24" width="18" height="231" pivotX="0.5" pivotY="0.87012987" />
+      <!-- The six o'clock seconds register is centred at (225,325), not at the face centre. -->
+      <SecondHand resource="seconds" x="219" y="266" width="12" height="76" pivotX="0.5" pivotY="0.7763158">
         <Variant mode="AMBIENT" target="alpha" value="0" />
         <Sweep frequency="15" />
       </SecondHand>

@@ -1,4 +1,4 @@
-# Champagne Atelier — classic dress-watch face for OPPO Watch X
+# Champagne Atelier v2 v2 — classic dress-watch face for OPPO Watch X
 
 An original, **free** watch face based on the third approved concept: champagne guilloché, black Breguet-inspired Arabic indices, brilliant blued-steel hands, a 6 o'clock small-seconds subdial, and restrained live health information. It uses **Watch Face Format v1** with no executable runtime and no paid watch-face app.
 
@@ -16,7 +16,7 @@ An original, **free** watch face based on the third approved concept: champagne 
 
 1. Create a new empty GitHub repo (private is okay).
 2. Unzip this project locally, then upload the **contents inside the project root**, including `.github/` (you should see `app/`, `scripts/`, `settings.gradle`, `build.gradle` at the repository root).
-3. Push to `main`, or go to **Actions → Build Champagne Atelier Watch X APK → Run workflow**.
+3. Push to `main`, or go to **Actions → Build Champagne Atelier v2 Watch X APK → Run workflow**.
 4. After a successful run, open the run and download the artifact named `ChampagneAtelier-WatchX-APK`.
 5. Unzip the artifact to find **`app-debug.apk`**. It is a debug-signed installer that can be directly sideloaded. No purchase is needed.
 
@@ -32,7 +32,7 @@ Open the project folder in Android Studio, set JDK 17 and Android SDK 35, then b
 4. If the watch shows a *pairing* IP and port, run `adb pair WATCH_IP:PAIR_PORT` and enter the displayed code.
 5. Run `adb connect WATCH_IP:DEBUG_PORT` using the **debugging** port shown on the watch (usually different from the pairing port).
 6. Verify with `adb devices`, then install with `adb install -r /path/to/app-debug.apk`.
-7. On the watch long-press the current face → **Add watch face** → **Champagne Atelier**.
+7. On the watch long-press the current face → **Add watch face** → **Champagne Atelier v2**.
 
 If you prefer, run `Install-on-Mac.command` included in the project and follow the prompts instead of entering the ADB commands manually.
 8. Turn **wireless debugging** off after installation.
@@ -52,3 +52,13 @@ The package name is `com.champagneatelier.watchx`, different from the previous d
 The XML is structurally checked using `scripts/check_project.py`, which also validates resource names and hand pivot geometry. As the current execution environment lacks the Android SDK and has no external download connectivity, this project **has not been compiled into an APK or physically tested on the Watch X**. The free CI workflow is provided for the actual APK build and will clearly report any Android build failures.
 
 Official WFF references: https://developer.android.com/codelabs/watch-face-format and https://developer.android.com/reference/wear-os/wff/common/attributes/source-type .
+
+
+## v2 upgrade
+- New edge-filling champagne guilloché dial and oversized numerals optimized for the OPPO Watch X screen
+- Larger navy-blue main hands and an enlarged small-seconds register
+- Larger dynamic battery, heart rate, step count and date data regions
+- New on-watch name: **Champagne Atelier v2**
+- New package ID: `com.champagneatelier.watchx.v2` so the previous v1 face stays installed for comparison; does not overwrite OHealth
+- Build artifacts are debug-signed for free sideloading and need watch-side testing; actual OHealth sensor refresh depends on watch providers
+- The preview contains demonstration metrics; the final dial resource contains no hard-coded numerical telemetry
