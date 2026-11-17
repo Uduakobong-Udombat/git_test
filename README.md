@@ -1,4 +1,4 @@
-# Champagne Atelier v2 v2 — classic dress-watch face for OPPO Watch X
+# Champagne Atelier v2 — classic dress-watch face for OPPO Watch X
 
 An original, **free** watch face based on the third approved concept: champagne guilloché, black Breguet-inspired Arabic indices, brilliant blued-steel hands, a 6 o'clock small-seconds subdial, and restrained live health information. It uses **Watch Face Format v1** with no executable runtime and no paid watch-face app.
 
@@ -14,9 +14,9 @@ An original, **free** watch face based on the third approved concept: champagne 
 
 ## Build a free APK without Android Studio, using GitHub Actions
 
-1. Create a new empty GitHub repo (private is okay).
-2. Unzip this project locally, then upload the **contents inside the project root**, including `.github/` (you should see `app/`, `scripts/`, `settings.gradle`, `build.gradle` at the repository root).
-3. Push to `main`, or go to **Actions → Build Champagne Atelier v2 Watch X APK → Run workflow**.
+1. The source is already on the `champagne-atelier-watchx` branch of the `Uduakobong-Udombat/git_test` repository.
+2. Open the existing branch; its `app/`, `scripts/`, and `.github/` folders are already committed.
+3. Open **Actions → Build Champagne Atelier v2 Watch X APK**, or use the successful run linked below.
 4. After a successful run, open the run and download the artifact named `ChampagneAtelier-WatchX-APK`.
 5. Unzip the artifact to find **`app-debug.apk`**. It is a debug-signed installer that can be directly sideloaded. No purchase is needed.
 
@@ -49,7 +49,7 @@ The package name is `com.champagneatelier.watchx`, different from the previous d
 
 ## Build / validation status
 
-The XML is structurally checked using `scripts/check_project.py`, which also validates resource names and hand pivot geometry. As the current execution environment lacks the Android SDK and has no external download connectivity, this project **has not been compiled into an APK or physically tested on the Watch X**. The free CI workflow is provided for the actual APK build and will clearly report any Android build failures.
+The source and geometry checks pass, and GitHub Actions successfully compiled and uploaded the debug APK on 17 November 2026 (run [44005233729](https://github.com/Uduakobong-Udombat/git_test/actions/runs/44005233729)). The APK has **not yet been installed or tested on the physical OPPO Watch X**. The digital telemetry renders from Wear OS providers and may vary by firmware.
 
 Official WFF references: https://developer.android.com/codelabs/watch-face-format and https://developer.android.com/reference/wear-os/wff/common/attributes/source-type .
 
